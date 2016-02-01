@@ -12,17 +12,18 @@ function app() {
 
     var buttons = document.getElementsByTagName('button');
 
-    for(var i = 0; i < buttons.length; i++) {
-        buttons[i].onclick = function() {
-            seed = buttons[i].dataset.seed;
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].onclick = function (event) {
+            seed = event.target.dataset.seed;
+            window.location.hash = seed;
             if (interval != null) {
                 clearInterval(interval);
             }
             go();
-        }
+        };
     }
 
-    var go = function() {
+    var go = function () {
         board = [];
         if (seed == 'random') {
             for (var i = 0; i < 48; i++) {
@@ -73,11 +74,10 @@ function app() {
     };
 
 
-
     /**
      * Some really inefficient way of calculating all of the neighbours
      */
-    var countNeighbours = function(x,y,board) {
+    var countNeighbours = function (x, y, board) {
         var neighbours = [];
 
         if (board[y - 1]) {
@@ -95,7 +95,7 @@ function app() {
             neighbours.push(board[y + 1][x + 1]);
         }
 
-        var filtered = neighbours.filter(function(neighbour) {
+        var filtered = neighbours.filter(function (neighbour) {
             return neighbour !== undefined && neighbour == 1;
         });
         return filtered.length;
@@ -110,16 +110,16 @@ function app() {
             return arr.slice();
         });
 
-        for(var row = 0; row < board.length; row++) {
-            for(var column = 0; column < board[row].length; column++) {
-                board[row][column] == 1 ? graphics_context_set_fill_color(ctx, GColorBlack): graphics_context_set_fill_color(ctx, GColorWhite);
-                graphics_fill_rect(ctx, GRect(column*3, row*3, 3, 3));
+        for (var row = 0; row < board.length; row++) {
+            for (var column = 0; column < board[row].length; column++) {
+                board[row][column] == 1 ? graphics_context_set_fill_color(ctx, GColorBlack) : graphics_context_set_fill_color(ctx, GColorWhite);
+                graphics_fill_rect(ctx, GRect(column * 3, row * 3, 3, 3));
                 var neighbourCount = countNeighbours(column, row, board);
-                if (neighbourCount < 2 && board[row][column] == 1) {
+                if (neighbourCount < 2 && board[row][column] === 1) {
                     nextGenBoard[row][column] = 0;
-                } else if (neighbourCount > 3 && board[row][column] == 1) {
+                } else if (neighbourCount > 3 && board[row][column] === 1) {
                     nextGenBoard[row][column] = 0;
-                } else if (neighbourCount == 3 && board[row][column] == 0) {
+                } else if (neighbourCount == 3 && board[row][column] === 0) {
                     nextGenBoard[row][column] = 1;
                 }
             }
