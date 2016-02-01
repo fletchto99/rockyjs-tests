@@ -10,13 +10,17 @@ function app() {
     var interval = null;
     var board = [];
 
-    window.addEventListener("hashchange", function () {
-        seed = location.hash.substr(1);
-        if (interval != null) {
-            clearInterval(interval);
+    var buttons = document.getElementsByTagName('button');
+
+    for(var i = 0; i < buttons.length; i++) {
+        buttons[i].onclick = function() {
+            seed = buttons[i].dataset.seed;
+            if (interval != null) {
+                clearInterval(interval);
+            }
+            go();
         }
-        go();
-    }, false);
+    }
 
     var go = function() {
         board = [];
